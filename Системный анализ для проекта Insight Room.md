@@ -32,8 +32,7 @@ stateDiagram-v2
 
     [*] --> Неактивная
     Неактивная --> Активная : Организатор начинает
-    Активная --> Записывается : Начата запись
-    Записывается --> Активная : Остановлена запись
+    
     
     state Активная {
         [*] --> Ожидание
@@ -42,7 +41,7 @@ stateDiagram-v2
     }
     
     Активная --> Завершенная : Организатор завершает
-    Записывается --> Завершенная : Организатор завершает
+    
     Завершенная --> [*]
 ```
 
@@ -65,12 +64,11 @@ graph LR
     D --> M[Демонстрировать экран]
     D --> N[Остановить демонстрацию]
     D --> O[Отправить сообщение в чат]
-    D --> P[Начать запись конференции]
-    D --> Q[Завершить запись конференции]
+  
     D --> R[Работать на интерактивной доске]
-    D --> S[Работать на интерактивной доске]
+
     D --> T[Добавлять аннотации]
-    D --> U[Совместно редактировать]
+    
   
     
     style B fill:#feeeff
@@ -86,12 +84,11 @@ graph LR
     style M fill:#e6f7ff
     style N fill:#e6f7ff
     style O fill:#e6f7ff
-    style P fill:#e6f7ff
-    style Q fill:#e6f7ff
+    
     style R fill:#e6f7ff
-	style S fill:#f8f8f8
+	
     style T fill:#f8f8f8
-    style U fill:#f8f8f8
+   
 ```
 
 
@@ -176,7 +173,7 @@ sequenceDiagram
     participant F as Frontend
     participant B as Backend
     participant W as WebRTC/WebSocket
-    participant O as Другие участники
+ 
 
     U->>F: Открывает доску Excalidraw
     F->>B: GET /api/room/{id}/whiteboard
@@ -185,11 +182,10 @@ sequenceDiagram
     
     U->>F: Редактирование доски
     F->>W: Отправка данных элемента
-    W->>O: Трансляция изменений
+   
     F->>B: POST /api/whiteboard/element
     B->>B: Сохранение элемента
-    B-->>F: Подтверждение
-    F->>O: Обновление доски у всех
+    
 ```
 
 
@@ -235,26 +231,4 @@ sequenceDiagram
     F-->>U: Отображение контактов
 ```
 
-##### 5. Запись конференции любым участником
 
-```mermaid
-sequenceDiagram
-    participant U as Участник
-    participant F as Frontend
-    participant B as Backend
-    participant M as Media Server
-   
-    U->>F: Нажимает "Начать запись"
-    F->>B: POST /api/room/{id}/record/request
-    
-    F->>M: Инициализация записи
-    M-->>F: Подтверждение
-    F-->>U: Индикатор записи активен
-    
-    U->>F: Останавливает запись
-    F->>M: Команда остановки
-    M->>M: Финализация видеофайла
-    M->>B: Уведомление о завершении
-    B->>B: Сохранение метаданных записи
-    B-->>U: Файл записи
-```
